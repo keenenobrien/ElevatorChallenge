@@ -12,6 +12,31 @@ public class Building(int lowestFloor, int highestFloor) : IBuilding
 
   public void AddElevator(IElevator elevator, int? highestFloor = null, int? lowestFloor = null)
   {
+    if (elevator == null)
+    {
+      throw new ArgumentNullException(nameof(elevator), "Elevator cannot be null.");
+    }
+
+    if (elevator.Id <= 0)
+    {
+      throw new ArgumentException("Elevator ID must be a positive integer.", nameof(elevator));
+    }
+
+    if (highestFloor.HasValue && (highestFloor < LowestFloor || highestFloor > HighestFloor))
+    {
+      throw new ArgumentOutOfRangeException(nameof(highestFloor), $"Highest floor must be between {LowestFloor} and {HighestFloor}.");
+    }
+
+    if (lowestFloor.HasValue && (lowestFloor < LowestFloor || lowestFloor > HighestFloor))
+    {
+      throw new ArgumentOutOfRangeException(nameof(lowestFloor), $"Lowest floor must be between {LowestFloor} and {HighestFloor}.");
+    }
+
+    if (highestFloor.HasValue && lowestFloor.HasValue && highestFloor < lowestFloor)
+    {
+      throw new ArgumentException("Highest floor cannot be lower than the lowest floor.", nameof(highestFloor));
+    }
+
     //Set the highest and lowest floors for the elevator if provided, otherwise it uses the building's values.
     elevator.HighestFloor = highestFloor ?? HighestFloor;
     elevator.LowestFloor = lowestFloor ?? LowestFloor;
