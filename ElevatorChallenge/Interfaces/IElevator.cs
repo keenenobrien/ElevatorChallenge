@@ -71,7 +71,14 @@ public interface IElevator
       return;
     }
 
-    MoveDirection = floor > CurrentFloor ? ElevatorDirection.Up : ElevatorDirection.Down;
+    if (floor > CurrentFloor)
+    {
+      SetDirection(ElevatorDirection.Up);
+    }
+    else
+    {
+      SetDirection(ElevatorDirection.Down);
+    }
 
     int numberOfFloorsToMove = Math.Abs(CurrentFloor - floor);
 
@@ -81,6 +88,7 @@ public interface IElevator
     SetState(ElevatorState.Moving);
     //Task.Delay(numberOfFloorsToMove * SecondsToMoveFloor * 1000).Wait(); // Simulate time taken to move
     Console.WriteLine($"Arrived at floor {CurrentFloor}.");
+    SetDirection(ElevatorDirection.None);
     SetState(ElevatorState.Idle);
   }
 
@@ -92,6 +100,22 @@ public interface IElevator
   {
     State = state;
     Console.WriteLine($"Elevator is now {State}.");
+  }
+
+  /// <summary>
+  /// Handles the state of the elevator.
+  /// </summary>
+  /// <param name="state">The state of the elevator.</param>
+  private void SetDirection(ElevatorDirection direction)
+  {
+    MoveDirection = direction;
+    if (direction == ElevatorDirection.None)
+    {
+      Console.WriteLine("Elevator has stopped.");
+      return;
+    }
+
+    Console.WriteLine($"Elevator is now going {MoveDirection}.");
   }
 
   /// <summary>
