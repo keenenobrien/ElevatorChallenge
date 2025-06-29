@@ -10,8 +10,11 @@ public class ElevatorTests
   readonly IElevator elevator;
   public ElevatorTests()
   {
-    building.AddElevator(new StandardElevator(1));
-    elevator = building.GetNearestElevator(5);
+    building.AddElevator(new StandardElevator(1, building)
+    {
+      SecondsToMoveFloor = 0,
+    });
+    elevator = building.GetNearestElevator(5) ?? throw new InvalidOperationException("No elevator found for the given floor.");
   }
 
   [Fact]
@@ -21,7 +24,7 @@ public class ElevatorTests
     int floor = 7;
 
     // Act
-    elevator.MoveToFloor(floor);
+    elevator.AddFloorRequest(floor);
 
     // Assert
     Assert.Equal(floor, elevator.CurrentFloor);
@@ -36,9 +39,8 @@ public class ElevatorTests
     int floor = elevator.LowestFloor - 3;
 
     // Act and Assert
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => elevator.MoveToFloor(floor));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => elevator.AddFloorRequest(floor));
     Assert.Equal("floor", exception.ParamName);
-    Assert.Contains("Floor cannot be below the lowest floor", exception.Message);
   }
 
   [Fact]

@@ -18,6 +18,11 @@ public interface IBuilding
   int HighestFloor { get; set; }
 
   /// <summary>
+  /// List of floor requests for the building.
+  /// </summary>
+  Queue<int> BuildingFloorRequests { get; set; }
+
+  /// <summary>
   /// Gets the elevators in the building.
   /// </summary>
   public List<IElevator> Elevators { get; }
@@ -34,5 +39,16 @@ public interface IBuilding
   /// Gets the closest elevator to the floor you are moving to.
   /// </summary>
   /// <param name="floor">The floor you are going to.</param>
-  IElevator GetNearestElevator(int floor);
+  IElevator? GetNearestElevator(int floor);
+
+  /// <summary>
+  /// Assigns a floor request to the nearest elevator.
+  /// </summary>
+  /// <param name="floor">The floor to assign.</param>
+  IElevator? AssignFloorRequest(int floor);
+
+  /// <summary>
+  /// Processes all floor requests in the queue.
+  /// </summary>
+  void ProcessFloorRequests();
 }

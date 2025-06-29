@@ -50,111 +50,53 @@ public interface IElevator
   ElevatorDirection MoveDirection { get; set; }
 
   /// <summary>
+  /// Queue that manages elevator floor requests.
+  /// </summary>
+  Queue<int> FloorRequests { get; set; }
+
+  /// <summary>
   /// Moves the elevator to a specified floor.
   /// </summary>
   /// <param name="floor">The floor to move to.</param>
-  void MoveToFloor(int floor)
-  {
-    if (floor < LowestFloor)
-    {
-      throw new ArgumentOutOfRangeException(nameof(floor), $"Floor cannot be below the lowest floor ({LowestFloor}).");
-    }
-
-    if (floor > HighestFloor)
-    {
-      throw new ArgumentOutOfRangeException(nameof(floor), $"Floor cannot be above the highest floor ({HighestFloor}).");
-    }
-
-    if (CurrentFloor == floor)
-    {
-      Console.WriteLine($"Already on floor {CurrentFloor}. No movement needed.");
-      return;
-    }
-
-    if (floor > CurrentFloor)
-    {
-      SetDirection(ElevatorDirection.Up);
-    }
-    else
-    {
-      SetDirection(ElevatorDirection.Down);
-    }
-
-    int numberOfFloorsToMove = Math.Abs(CurrentFloor - floor);
-
-    Console.WriteLine($"Moving {numberOfFloorsToMove} floor(s) from floor {CurrentFloor} to floor {floor}.");
-    //Console.WriteLine($"Movement will take {numberOfFloorsToMove * SecondsToMoveFloor} seconds.");
-    CurrentFloor = floor;
-    SetState(ElevatorState.Moving);
-    //Task.Delay(numberOfFloorsToMove * SecondsToMoveFloor * 1000).Wait(); // Simulate time taken to move
-    Console.WriteLine($"Arrived at floor {CurrentFloor}.");
-    SetDirection(ElevatorDirection.None);
-    SetState(ElevatorState.Idle);
-  }
+  void MoveToFloor(int floor);
 
   /// <summary>
   /// Handles the state of the elevator.
   /// </summary>
   /// <param name="state">The state of the elevator.</param>
-  private void SetState(ElevatorState state)
-  {
-    State = state;
-    Console.WriteLine($"Elevator is now {State}.");
-  }
+  void SetState(ElevatorState state);
 
   /// <summary>
   /// Handles the state of the elevator.
   /// </summary>
   /// <param name="state">The state of the elevator.</param>
-  private void SetDirection(ElevatorDirection direction)
-  {
-    MoveDirection = direction;
-    if (direction == ElevatorDirection.None)
-    {
-      Console.WriteLine("Elevator has stopped.");
-      return;
-    }
-
-    Console.WriteLine($"Elevator is now going {MoveDirection}.");
-  }
+  void SetDirection(ElevatorDirection direction);
 
   /// <summary>
   /// Handles the amount of people entering the elevator.
   /// </summary>
   /// <param name="amountEntering">The total amount of people entering the elevator.</param>
-  void HandlePeopleEntering(int amountEntering)
-  {
-    if (amountEntering <= 0)
-    {
-      throw new ArgumentOutOfRangeException(nameof(amountEntering), "Amount of people entering must be greater than zero.");
-    }
-
-    if (CurrentLoad + amountEntering > MaxCapacity)
-    {
-      throw new InvalidOperationException($"{amountEntering} person(s) cannot enter the elevator. Maximum capacity is {MaxCapacity}.");
-    }
-
-    CurrentLoad += amountEntering;
-    Console.WriteLine($"{amountEntering} person(s) entered the elevator. Current load is now {CurrentLoad}.");
-  }
+  void HandlePeopleEntering(int amountEntering);
 
   /// <summary>
   /// Handles the amount of people exiting the elevator.
   /// </summary>
   /// <param name="amountExiting">The total amount of people exiting
-  void HandlePeopleExiting(int amountExiting)
-  {
-    if (amountExiting < 0)
-    {
-      throw new ArgumentOutOfRangeException(nameof(amountExiting), "Amount of people exiting can't be less than zero.");
-    }
+  void HandlePeopleExiting(int amountExiting);
 
-    if (amountExiting > CurrentLoad)
-    {
-      throw new InvalidOperationException($"{amountExiting} person(s) cannot exit the elevator, {CurrentLoad} are currently in the elevator.");
-    }
+  /// <summary>
+  /// Adds a floor request to the elevator's queue.
+  /// </summary>
+  /// <param name="floor">The floor to request.</param>
+  void AddFloorRequest(int floor);
 
-    CurrentLoad -= amountExiting;
-    Console.WriteLine($"{amountExiting} person(s) exited the elevator. Current load is now {CurrentLoad}.");
-  }
+  /// <summary>
+  /// Moves the elevator based on the floor requests in the queue.
+  /// </summary>
+  void Move();
+
+  /// <summary>
+  /// Sorts the queue of floor requests
+  /// </summary>
+  void SortFloorRequests();
 }

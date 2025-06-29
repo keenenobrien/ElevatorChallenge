@@ -18,7 +18,6 @@ public class BuildingTests
         Assert.Equal(10, building.NumberOfFloors);
         Assert.Equal(1, building.LowestFloor);
         Assert.Equal(10, building.HighestFloor);
-        Assert.Equal(10, building.HighestFloor);
         Assert.Empty(building.Elevators);
     }
 }

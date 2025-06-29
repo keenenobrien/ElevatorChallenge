@@ -7,7 +7,9 @@ namespace ElevatorChallenge.BusinessLogic;
 public class UserInput(Building building)
 {
   IElevator? currentElevator = null;
-  public void RequestInput(InputState inputState)
+  int FloorRequested = 0;
+  readonly Display display = new(building);
+  public string? RequestInput(InputState inputState)
   {
     switch (inputState)
     {
@@ -27,6 +29,8 @@ public class UserInput(Building building)
         Console.WriteLine("Invalid input state. Something has gone wrong");
         break;
     }
+
+    return Console.ReadLine();
   }
 
   public InputState HandleInput(string input, InputState state)
@@ -37,13 +41,15 @@ public class UserInput(Building building)
       {
         case InputState.CallElevator:
           {
-            currentElevator = building.GetNearestElevator(int.Parse(input));
-            currentElevator.MoveToFloor(int.Parse(input));
+            int floor = int.Parse(input);
+            FloorRequested = floor;
+            building.AssignFloorRequest(floor);
             return InputState.PeopleExiting;
           }
         case InputState.PeopleExiting:
           {
             int exiting = int.Parse(input);
+            currentElevator = building.GetNearestElevator(FloorRequested);
             currentElevator!.HandlePeopleExiting(exiting);
             return InputState.PeopleEntering;
           }
@@ -56,7 +62,7 @@ public class UserInput(Building building)
         case InputState.FloorSelection:
           {
             int selectedFloor = int.Parse(input);
-            currentElevator!.MoveToFloor(selectedFloor);
+            currentElevator!.AddFloorRequest(selectedFloor);
             // This is a placeholder for now since there is no way for other people to exit the elevator.
             //This line will assume that everybody who enetered the elevator has exited at the selected floor.
             currentElevator!.HandlePeopleExiting(currentElevator.CurrentLoad);
@@ -139,5 +145,30 @@ public class UserInput(Building building)
       Console.WriteLine($"An error occurred while validating input: {ex.Message}");
       return false;
     }
+  }
+
+  public void UserInputProcess()
+  {
+    InputState inputState = InputState.CallElevator;
+
+    string? input;
+    do
+    {
+      //Display all the elevators and their status
+      display.DisplayAllInfo();
+
+      //Request input from the user based on the current state
+      input = RequestInput(inputState);
+      Console.Clear();
+
+      //Check if the input is valid based on the current state
+      if (CheckInputIsValid(input, inputState))
+      {
+        //If the input is valid, handle the input based on the current state
+        inputState = HandleInput(input!, inputState);
+      }
+    }
+    //Exit the app if exit is typed
+    while (input != "exit");
   }
 }

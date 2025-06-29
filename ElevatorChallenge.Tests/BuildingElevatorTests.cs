@@ -11,7 +11,7 @@ public class BuildingElevatorTests
   {
     // Arrange
     int elevatorId = 1;
-    var elevator = new StandardElevator(elevatorId);
+    var elevator = new StandardElevator(elevatorId, building);
 
     // Act
     building.AddElevator(elevator);
@@ -27,7 +27,7 @@ public class BuildingElevatorTests
   {
     // Arrange
     int elevatorId = 1;
-    var elevator = new StandardElevator(1);
+    var elevator = new StandardElevator(1, building);
     int customLowestFloor = 2;
     int customHighestFloor = 7;
 
@@ -55,7 +55,7 @@ public class BuildingElevatorTests
   public void GIVEN_InvalidElevatorId_WHEN_AddElevator_THEN_ThrowsArgumentException()
   {
     // Arrange
-    var elevator = new StandardElevator(0); // Invalid ID
+    var elevator = new StandardElevator(0, building); // Invalid ID
 
     // Act and Assert
     var exception = Assert.Throws<ArgumentException>(() => building.AddElevator(elevator));
@@ -67,7 +67,7 @@ public class BuildingElevatorTests
   public void GIVEN_HighestFloorOutOfRange_WHEN_AddElevator_THEN_ThrowsArgumentOutOfRangeException()
   {
     // Arrange
-    var elevator = new StandardElevator(1);
+    var elevator = new StandardElevator(1, building);
     int outOfRangeHighestFloor = building.HighestFloor + 5;
 
     // Act and Assert
@@ -80,7 +80,7 @@ public class BuildingElevatorTests
   public void GIVEN_LowestFloorOutOfRange_WHEN_AddElevator_THEN_ThrowsArgumentOutOfRangeException()
   {
     // Arrange
-    var elevator = new StandardElevator(1);
+    var elevator = new StandardElevator(1, building);
     int outOfRangeLowestFloor = building.LowestFloor - 3;
 
     // Act and Assert
@@ -93,7 +93,7 @@ public class BuildingElevatorTests
   public void GIVEN_HighestFloorLowerThanLowestFloor_WHEN_AddElevator_THEN_ThrowsArgumentException()
   {
     // Arrange
-    var elevator = new StandardElevator(1);
+    var elevator = new StandardElevator(1, building);
     int invalidHighestFloor = 1;
     int lowestFloor = 2;
 
@@ -102,21 +102,23 @@ public class BuildingElevatorTests
     Assert.Equal("highestFloor", exception.ParamName);
     Assert.Contains("Highest floor cannot be lower than the lowest floor.", exception.Message);
   }
-  
-  //TODO - Update this test when the GetNearestElevator method is implemented properly
+
+
   [Fact]
   public void GIVEN_ValidFloor_WHEN_GetNearestElevator_THEN_ReturnsNearestElevator()
   {
     // Arrange
     int floor = 5;
-    var elevator = new StandardElevator(1);
-    building.AddElevator(elevator);
+    var elevator1 = new StandardElevator(1, building);
+    var elevator2 = new StandardElevator(2, building);
+    building.AddElevator(elevator1);
+    building.AddElevator(elevator2, 10, 3);
 
     // Act
     var nearestElevator = building.GetNearestElevator(floor);
 
     // Assert
     Assert.NotNull(nearestElevator);
-    Assert.Equal(elevator.Id, nearestElevator.Id);
+    Assert.Equal(elevator2.Id, nearestElevator.Id);
   }
 }
