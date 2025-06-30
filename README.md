@@ -1,10 +1,10 @@
 # ElevatorChallenge
 
-This project impliments logic to manage an elevator system in a building. It's focus is on evelator efficiency, ensuring that people do not need to wait long for an elevator but also so that elevators do not get stuck servicing requests far away.
+This project implements logic to manage an elevator system in a building. It's focus is on elevator efficiency, ensuring that people do not need to wait long for an elevator but also so that elevators do not get stuck servicing requests far away.
 
 # How it works
 
-When a user calls an elevator from a floor, a request is sent to the building. The building will then assign the request to the closest elevator of valid evelators able to accept that request. For an elevator to be able to accept the request it must be idle OR already be at/ on the way to the requested floor.
+When a user calls an elevator from a floor, a request is sent to the building. The building will then assign the request to the closest elevator of valid elevators able to accept that request. For an elevator to be able to accept the request it must be idle OR already be at/ on the way to the requested floor.
 
 If no elevators can accept the request. It goes into a request queue for the building which will be processed each time an elevator becomes idle.
 
@@ -12,7 +12,7 @@ Each elevator has a request queue. This queue is sorted each time the elevator m
 
 Each time people get on/off the elevator, the amount of people entering/leaving change, the amount is validated.
 
-**Setting upp a building**
+**Setting up a building**
 
 To create a new building and add elevators to it you need to do the following:
 
@@ -25,32 +25,32 @@ Add elevators and give each a unique id, this id will be used as the elevator nu
 ```cs
 building.AddElevator(new StandardElevator(1, building));
 building.AddElevator(new StandardElevator(2, building));
-building.AddElevator(new StandardElevator(3, building), 10, 5);
+building.AddElevator(new StandardElevator(3, building), 5, 10);
 ```
 
 This example would create a building with the lowest floor being 0 and the highest being 10. Three elevators will be added. The first two will be able to go from floor 0 to floor 10. The third can only go from floor 5 to floor 10.
 
-The time it takes for an elevator to move from floor to floor is a part of the elevators class. By default it is two seconds. This value can be changed in the elevators class (In this case StandardElevator.cs). Changing this value would change the speed at which the processes below run.
+The time it takes for an elevator to move from floor to floor is a part of the elevators class. By default, it is two seconds. This value can be changed in the elevators class (In this case StandardElevator.cs). Changing this value would change the speed at which the processes below run.
 
 This example is the default building structure used for the processes below.
 
 **User Input Process**
 
-There is a step by step process that allows a user to interact with the elevator system. This project is a console app so some logic was implimented that wouldn't be nessicary in a real world scenario. The step by step process is as follows:
+There is a step by step process that allows a user to interact with the elevator system. This project is a console app so some logic was implemented that wouldn't be necessary in a real-world scenario. The step by step process is as follows:
 
 1) The user enters a floor they are calling an elevator from
    1) The floor they have entered is validated according to the elevators' highest and lowest floors.
-      1) In a real world scenario this validation would not be needed as the button would be assigned a floor number.
-2) The relevand elevator is sent to the users location.
+      1) In a real-world scenario this validation would not be needed as the button would be assigned a floor number.
+2) The relevant elevator is sent to the users location.
 3) The user enters how many people leave the elevator
    1) The number of people they entered to exit is validated according to how many people were in the elevator already. You cannot have more people exit than were inside the elevator.
       1) Normally this is not something a user would enter/control
 4) The user enters the number of users that are entering the elevator
    1) The number of people they entered to enter is validated according to how many people were in the elevator already. You cannot have people enter if it would exceed the limit of people.
       1) Normally this is not something a user would enter/control
-5) The user eneters the floor that they want to go to.
+5) The user enters the floor that they want to go to.
    1) The floor is validated against the floors that the current elevator can go to.
-      1) In a real world scenario, the user would be pressing buttons inside the elevator to decide which floor to go to. The buttons inside would be limited to only the floors the elevator could access. So the user would not enter a value and it wouldn't need to be validated.
+      1) In a real-world scenario, the user would be pressing buttons inside the elevator to decide which floor to go to. The buttons inside would be limited to only the floors the elevator could access. So the user would not enter a value and it wouldn't need to be validated.
 6) The elevator moves to the selected floor and all of the people who got on will get off.
 
 To run the user input process, you can uncomment this line in program.cs:
@@ -86,11 +86,11 @@ This solution includes a project called ElevatorChallenge.Tests. This project co
 
 There are a number of improvements that could be made to this solution, including:
 
-1) Elevators should be able to run asyncronously and queues should handle this.
+1) Elevators should be able to run asynchronously and queues should handle this.
 2) The code could be far more modular which would increase it's testability. Currenty there are methods that are not single responsibility.
-3) Elevator number could be added as its own field and ID could be used as a unique identifyer. Currently the ID column does both.
-4) A better simulation, a simulation could be made to include errors and how the errors are handled. A simulation could be made to show how elevators are capable of running asyncronously.
-5) Interfaces could be implimented better. Currently the interfaces are less modular than they should be. and example could be: There could be an interface for maximum and minumum floors since both elevators and buildings have both values.
+3) Elevator number could be added as its own field and ID could be used as a unique identifier. Currently, the ID column does both.
+4) A better simulation, a simulation could be made to include errors and how the errors are handled. A simulation could be made to show how elevators are capable of running asynchronously.
+5) Interfaces could be implemented better. Currently the interfaces are less modular than they should be. and example could be: There could be an interface for maximum and minimum floors since both elevators and buildings have both values.
 6) Elevators and buildings could have a list of floors rather than a max and min. This would allow floor management to be more granular.
-7) User experience can be better. Adding things like different colors for different logs or different colors for different elevators could make reading the console much easier for the user.
+7) User experience can be better. Adding things like different colours for different logs or different colours for different elevators could make reading the console much easier for the user.
 8) The console app could request values from the user to allow them to build their own building with elevators for the simulation they want to run/ the structure they want to test. It could then ask if they want to simulate it or to manually run through it. This would leave all the setup in the users control with no code changes.
