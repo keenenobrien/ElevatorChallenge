@@ -12,7 +12,7 @@ public class Building(int lowestFloor, int highestFloor) : IBuilding
   public List<IElevator> Elevators { get; } = [];
   public Queue<int> BuildingFloorRequests { get; set; } = new Queue<int>();
 
-  public void AddElevator(IElevator elevator, int? highestFloor = null, int? lowestFloor = null)
+  public void AddElevator(IElevator elevator, int? lowestFloor = null, int? highestFloor = null)
   {
     if (elevator == null)
     {

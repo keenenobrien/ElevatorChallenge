@@ -32,7 +32,7 @@ public class BuildingElevatorTests
     int customHighestFloor = 7;
 
     // Act
-    building.AddElevator(elevator, customHighestFloor, customLowestFloor);
+    building.AddElevator(elevator, customLowestFloor, customHighestFloor);
 
     // Assert
     Assert.Equal(customLowestFloor, elevator.LowestFloor);
@@ -71,7 +71,7 @@ public class BuildingElevatorTests
     int outOfRangeHighestFloor = building.HighestFloor + 5;
 
     // Act and Assert
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => building.AddElevator(elevator, outOfRangeHighestFloor));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => building.AddElevator(elevator, highestFloor:outOfRangeHighestFloor));
     Assert.Equal("highestFloor", exception.ParamName);
     Assert.Contains($"Highest floor must be between {building.LowestFloor} and {building.HighestFloor}.", exception.Message);
   }
@@ -84,7 +84,7 @@ public class BuildingElevatorTests
     int outOfRangeLowestFloor = building.LowestFloor - 3;
 
     // Act and Assert
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => building.AddElevator(elevator, lowestFloor: outOfRangeLowestFloor));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => building.AddElevator(elevator, outOfRangeLowestFloor));
     Assert.Equal("lowestFloor", exception.ParamName);
     Assert.Contains($"Lowest floor must be between {building.LowestFloor} and {building.HighestFloor}.", exception.Message);
   }
@@ -98,7 +98,7 @@ public class BuildingElevatorTests
     int lowestFloor = 2;
 
     // Act and Assert
-    var exception = Assert.Throws<ArgumentException>(() => building.AddElevator(elevator, invalidHighestFloor, lowestFloor));
+    var exception = Assert.Throws<ArgumentException>(() => building.AddElevator(elevator, lowestFloor, invalidHighestFloor));
     Assert.Equal("highestFloor", exception.ParamName);
     Assert.Contains("Highest floor cannot be lower than the lowest floor.", exception.Message);
   }
@@ -112,7 +112,7 @@ public class BuildingElevatorTests
     var elevator1 = new StandardElevator(1, building);
     var elevator2 = new StandardElevator(2, building);
     building.AddElevator(elevator1);
-    building.AddElevator(elevator2, 10, 3);
+    building.AddElevator(elevator2, 3, 10);
 
     // Act
     var nearestElevator = building.GetNearestElevator(floor);
