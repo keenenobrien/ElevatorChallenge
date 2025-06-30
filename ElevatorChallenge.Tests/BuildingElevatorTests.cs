@@ -84,7 +84,7 @@ public class BuildingElevatorTests
     int outOfRangeLowestFloor = building.LowestFloor - 3;
 
     // Act and Assert
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => building.AddElevator(elevator, outOfRangeLowestFloor));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => building.AddElevator(elevator, lowestFloor: outOfRangeLowestFloor));
     Assert.Equal("lowestFloor", exception.ParamName);
     Assert.Contains($"Lowest floor must be between {building.LowestFloor} and {building.HighestFloor}.", exception.Message);
   }
